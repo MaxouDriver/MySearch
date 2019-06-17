@@ -99,12 +99,12 @@ class _LoginState extends State<Login> {
     String password = _passwordController.text;
 
     APIManager.login(username, password).then((value) =>
-      value.token != null ? _onLoginSuccess(context, value.token) : _onLoginFailure(context, value.error)
-    ).catchError((error) => _onLoginFailure(context, error));
+      value.error == null ? _onLoginSuccess(context, value.json) : _onLoginFailure(context, value.error)
+    ).catchError((error) => _onLoginFailure(context, error.toString()));
   }
 
-  void _onLoginSuccess(BuildContext context, token){
-    AuthenticationManager.setToken(token);
+  void _onLoginSuccess(BuildContext context, infos){
+    AuthenticationManager.login(infos);
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => Home()),
     );

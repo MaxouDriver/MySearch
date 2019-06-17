@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 import 'package:mysearch/screens/search.dart';
+import 'package:mysearch/screens/settings.dart';
+import 'package:mysearch/screens/login.dart';
 import 'package:mysearch/utils/APIManager.dart';
+import 'package:mysearch/utils/AuthenticationManager.dart';
 import 'package:mysearch/models/ad-response.dart';
-
-final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -18,17 +18,55 @@ class _HomeScreenState extends State<Home> {
   GlobalKey _keyRed = GlobalKey();
   bool _position = true;
 
+
+
   @override
   Widget build(BuildContext context) {
-    return InnerDrawer(
-        key: _innerDrawerKey,
-        position: InnerDrawerPosition.start, // required
-        onTapClose: true, // default false
-        swipe: true, // default true
-        offset: 0.6, // default 0.4
-        colorTransition: Color(0xFF1A1A28), // default Color.black54
-        animationType: InnerDrawerAnimation.linear, // default static
-        innerDrawerCallback: (a) => print(a), // return bool
+    AuthenticationManager.getInfos().then((value){
+      if(value["token"] == null) {
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    }).catchError((error){
+      print(error.toString());
+    });
+
+    return Scaffold(
+      appBar: AppBar(title: Text("MySearch")),
+      body: Stack(
+        children: [
+          Container(
+            color: Theme.of(context).primaryColor,
+            height: 55.0,
+          ),
+          Card(
+            margin: const EdgeInsets.all(16.0),
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: FutureBuilder<AdResponse>(
+              future: APIManager.fetchAds(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return new ListView(
+                      children: snapshot.data.ads.map((ad) => Card(
+                          margin: const EdgeInsets.all(10),
+                          child: ListTile(
+                              leading: Image.network(ad.images[0], width: 110,fit: BoxFit.fitWidth),
+                              title: new Text(ad.title)
+                          )
+                      )
+                      ).toList());
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+                return CircularProgressIndicator();
+              },
+            ),
+          ),
+        ],
+      ),
+      drawer: Drawer(
         child: Material(
             child: SafeArea(
               child: Stack(
@@ -38,37 +76,52 @@ class _HomeScreenState extends State<Home> {
                     children: <Widget>[
                       Padding(
                           padding: EdgeInsets.only(top:12,bottom: 4, left: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Row(
+                          child: GestureDetector(
+                            onTap: () { print("Container was tapped"); },
+                            child: PopupMenuButton<String>(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  SizedBox(
-                                    width: 15,
-                                    height: 15,
-                                    child: CircleAvatar(
-                                      child: Icon(Icons.person,color: Colors.white,size: 12),
-                                      backgroundColor: Colors.grey,
-                                    ),
+                                  Row(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width: 15,
+                                        height: 15,
+                                        child: CircleAvatar(
+                                          child: Icon(Icons.person,color: Colors.white,size: 12),
+                                          backgroundColor: Colors.grey,
+                                        ),
+                                      ),
+                                      Text("   Guest",
+                                        style: TextStyle(fontWeight: FontWeight.w600, height: 1.2),
+                                      ),
+                                    ],
                                   ),
-                                  Text("   Guest",
-                                    style: TextStyle(fontWeight: FontWeight.w600, height: 1.2),
+                                  Padding(
+                                    padding: EdgeInsets.only(top:2, right: 25),
+                                    child: GestureDetector(
+                                      child: Icon(
+                                        _position ? Icons.arrow_back:Icons.arrow_forward,
+                                        size: 18,),
+                                    ),
                                   ),
                                 ],
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(top:2, right: 25),
-                                child: GestureDetector(
-                                  child: Icon(
-                                    _position ? Icons.arrow_back:Icons.arrow_forward,
-                                    size: 18,),
-                                  onTap: ()
-                                  {
-                                    _innerDrawerKey.currentState.close();
-                                  },
-                                ),
-                              ),
-                            ],
+                              onSelected: (String s) {
+                                if (s == "Lougout") {
+                                  AuthenticationManager.logout();
+                                  Navigator.pushReplacementNamed(context, '/login');
+                                }
+                              },
+                              itemBuilder: (BuildContext context){
+                                return <String>["Lougout"].map((String choice){
+                                  return PopupMenuItem<String>(
+                                    value: choice,
+                                    child: Text(choice),
+                                  );
+                                }).toList();
+                              },
+                            ),
                           )
                       ),
                       Divider(),
@@ -78,6 +131,15 @@ class _HomeScreenState extends State<Home> {
                         onTap: (){
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (_) => Search()),
+                          );
+                        },
+                      ),
+                      ListTile(
+                        title:  Text("Settings"),
+                        leading:Icon(Icons.settings),
+                        onTap: (){
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => Settings()),
                           );
                         },
                       )
@@ -108,47 +170,7 @@ class _HomeScreenState extends State<Home> {
               ),
             )
         ),
-        //  A Scaffold is generally used but you are free to use other widgets
-        // Note: use "automaticallyImplyLeading: false" if you do not personalize "leading" of Bar
-        scaffold: Scaffold(
-            appBar: AppBar(
-                automaticallyImplyLeading: false
-            ),
-            body: Stack(
-              children: [
-                Container(
-                  color: Theme.of(context).primaryColor,
-                  height: 55.0,
-                ),
-                Card(
-                  margin: const EdgeInsets.all(16.0),
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: FutureBuilder<AdResponse>(
-                    future: APIManager.fetchAds(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return new ListView(
-                            children: snapshot.data.ads.map((ad) => Card(
-                                margin: const EdgeInsets.all(10),
-                                child: ListTile(
-                                  leading: Image.network(ad.images[0], width: 110,fit: BoxFit.fitWidth),
-                                  title: new Text(ad.title)
-                                )
-                              )
-                            ).toList());
-                      } else if (snapshot.hasError) {
-                        return Text("${snapshot.error}");
-                      }
-                      return CircularProgressIndicator();
-                    },
-                  ),
-                ),
-              ],
-            )
-        )
+      )
     );
   }
 }

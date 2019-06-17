@@ -26,7 +26,7 @@ class _AddSearchState extends State<AddSearch> {
 
     APIManager.categories().then((value) =>
         setState(() {
-          value.json.forEach((dynamic value){
+          value.json.forEach((String s, dynamic value){
             items.add(value["label"]);
           });
         })

@@ -103,12 +103,12 @@ class _RegisterState extends State<Register> {
     String password = _passwordController.text;
 
     APIManager.register(email, password).then((value) =>
-    value.token != null ? _onRegisterSuccess(context, value.token) : _onRegisterFailure(context, value.error)
+    value.json["token"] != null ? _onRegisterSuccess(context, value.json) : _onRegisterFailure(context, value.error)
     ).catchError((error) => _onRegisterFailure(context, error));
   }
 
-  void _onRegisterSuccess(BuildContext context, token){
-    AuthenticationManager.setToken(token);
+  void _onRegisterSuccess(BuildContext context, infos){
+    AuthenticationManager.login(infos);
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => Home()),
     );

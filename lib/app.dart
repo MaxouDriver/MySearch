@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mysearch/screens/home.dart';
 import 'package:mysearch/screens/login.dart';
+
 
 class App extends StatefulWidget {
   App({Key key}) : super(key: key);
@@ -12,7 +14,6 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -23,7 +24,11 @@ class _AppState extends State<App> {
         primarySwatch: Colors.blue,
         primaryColor: Color(0xFF1A1A28),
       ),
-      home: Login(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => Home(),
+        '/login': (context) => Login(),
+      }
     );
   }
 }

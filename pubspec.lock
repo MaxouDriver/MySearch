@@ -104,13 +104,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0-dev.1"
-  flutter_inner_drawer:
-    dependency: "direct main"
-    description:
-      name: flutter_inner_drawer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.8"
   flutter_map:
     dependency: "direct main"
     description:
@@ -209,6 +202,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
+  shared_preferences:
+    dependency: "direct main"
+    description:
+      name: shared_preferences
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.3+1"
   sky_engine:
     dependency: transitive
     description: flutter

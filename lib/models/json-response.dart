@@ -1,7 +1,7 @@
 import 'package:mysearch/models/server-response.dart';
 
 class JsonResponse extends ServerResponse {
-  final List<dynamic> json;
+  final Map<String, dynamic> json;
 
   JsonResponse(int code, String message, String error, this.json) : super(code: code, message: message, error: error);
 
