@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:mysearch/screens/search.dart';
 import 'package:mysearch/screens/settings.dart';
-import 'package:mysearch/screens/login.dart';
 import 'package:mysearch/utils/APIManager.dart';
 import 'package:mysearch/utils/AuthenticationManager.dart';
 import 'package:mysearch/models/ad-response.dart';

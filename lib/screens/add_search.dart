@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
+import 'package:mysearch/models/category.dart';
 import 'package:mysearch/utils/APIManager.dart';
+import 'package:mysearch/models/json-response.dart';
 
 class AddSearch extends StatefulWidget {
   AddSearch({Key key}) : super(key: key);
@@ -12,30 +14,44 @@ class AddSearch extends StatefulWidget {
 class _AddSearchState extends State<AddSearch> {
   List<LatLng> tappedPoints = [];
   List<Polygon> polys = [];
-  List<String> items = ["a"];
+  List<DropdownMenuItem<Category>> items = [];
 
   final _formKey = GlobalKey<FormState>();
-  String dropdownValue = 'One';
+  Category dropdownValue = null;
   final _queryController = TextEditingController();
-
-
 
   @override
   initState() {
     super.initState();
 
-    APIManager.categories().then((value) =>
-        setState(() {
-          value.json.forEach((String s, dynamic value){
-            items.add(value["label"]);
-          });
-        })
-    );
+    getItems().then((value)=> setState(()=> items = value));
+  }
+
+  Future<List<DropdownMenuItem<Category>>> getItems() async{
+    JsonResponse res = await APIManager.categories();
+    List<Category> cats = res.json["categories"].map((dynamic value) => Category.fromJson(value)).toList().cast<Category>();
+    List<Category> catsReduce = [];
+    cats.forEach((c){
+      if (c.subcategories == null) {
+        catsReduce.add(c);
+      }else{
+        catsReduce.add(c);
+
+        catsReduce.addAll(c.subcategories);
+      }
+    });
+    return catsReduce.map<DropdownMenuItem<Category>>((Category value) {
+          return new DropdownMenuItem<Category>(
+            value: value,
+            child: Text(value.label.toString()),
+          );
+        }).toList();
   }
 
 
   @override
   Widget build(BuildContext context) {
+
     var markers = tappedPoints.map((latlng) {
       return Marker(
         width: 80.0,
@@ -77,19 +93,14 @@ class _AddSearchState extends State<AddSearch> {
                 hintText: 'nice car',
                 labelText: 'What are you searching for',
               )
-            ),DropdownButton<String>(
+            ),DropdownButton<Category>(
                 value: dropdownValue,
-                onChanged: (String newValue) {
+                onChanged: (Category newValue) {
                   setState(() {
                     dropdownValue = newValue;
                   });
                 },
-                items: items.map((String value) {
-                  return new DropdownMenuItem<String>(
-                    value: value,
-                    child: new Text(value),
-                  );
-                }).toList(),
+                items: items,
               )
             ,
             Flexible(
