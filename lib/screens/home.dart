@@ -44,9 +44,14 @@ class _HomeScreenState extends State<Home> {
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: FutureBuilder<AdResponse>(
-              future: APIManager.fetchAds(),
+              future: APIManager.fetchAds(context),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  if (snapshot.data.error != null){
+                    return Text("${snapshot.error}");
+                  } print(snapshot.data.error);
+                  if (snapshot.data.ads == null) return Text("No data");
+
                   return new ListView(
                       children: snapshot.data.ads.map((ad) => Card(
                           margin: const EdgeInsets.all(10),

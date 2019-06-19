@@ -1,16 +1,16 @@
 import 'package:mysearch/models/ad.dart';
+import 'package:mysearch/models/server-response.dart';
 
-class AdResponse {
+class AdResponse extends ServerResponse {
   final List<Ad> ads;
-  final String error;
 
-  AdResponse({this.ads, this.error});
+  AdResponse(String message, String error, this.ads) : super(message: message, error: error);
 
   factory AdResponse.fromJson(Map<String, dynamic> json) {
-    return new AdResponse(ads: (json["ads"] as List).map((i) => new Ad.fromJson(i)).toList(), error: "");
+    return AdResponse(json["message"], json["error"], (json['ads'] != null) ? (new List<Map<String, dynamic>>.from(json['ads'])).map((Map<String, dynamic> j) => Ad.fromJson(j)).toList() : []);
   }
 
   factory AdResponse.withError(String errorValue) {
-    return new AdResponse(ads: List(), error: errorValue);
+    return AdResponse(null, errorValue, null);
   }
 }

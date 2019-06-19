@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Category {
   final String id;
   final String label;
@@ -10,8 +8,6 @@ class Category {
   Category({this.id, this.label, this.channel, this.subcategories});
 
   factory Category.fromJson(Map<String, dynamic> json) {
-
-
     return Category(
         id: json['id'],
         label: json['label'],
@@ -20,5 +16,12 @@ class Category {
     );
   }
 
-
+  toJson() {
+    Map<String, dynamic> res = {
+      "id": id,
+      "label": label,
+      "channel": channel
+    };
+    return res;
+  }
 }

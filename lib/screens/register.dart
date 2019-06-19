@@ -102,7 +102,7 @@ class _RegisterState extends State<Register> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    APIManager.register(email, password).then((value) =>
+    APIManager.register(email, password, context).then((value) =>
     value.json["token"] != null ? _onRegisterSuccess(context, value.json) : _onRegisterFailure(context, value.error)
     ).catchError((error) => _onRegisterFailure(context, error));
   }

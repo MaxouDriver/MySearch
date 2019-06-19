@@ -98,7 +98,7 @@ class _LoginState extends State<Login> {
     String username = _emailController.text;
     String password = _passwordController.text;
 
-    APIManager.login(username, password).then((value) =>
+    APIManager.login(username, password, context).then((value) =>
       value.error == null ? _onLoginSuccess(context, value.json) : _onLoginFailure(context, value.error)
     ).catchError((error) => _onLoginFailure(context, error.toString()));
   }
