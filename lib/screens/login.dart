@@ -3,8 +3,6 @@ import 'package:mysearch/screens/register.dart';
 import 'package:mysearch/utils/APIManager.dart';
 import 'package:mysearch/utils/AuthenticationManager.dart';
 
-import 'package:mysearch/screens/home.dart';
-
 class Login extends StatefulWidget {
   Login({Key key}) : super(key: key);
 
@@ -78,9 +76,7 @@ class _LoginState extends State<Login> {
                     child: new Text("SignUp"),
                     color:  Colors.blueAccent[600],
                     onPressed: (){
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => Register()),
-                      );
+                      Navigator.pushReplacementNamed(context, '/register');
                     },
                   ),
                 ],
@@ -104,10 +100,9 @@ class _LoginState extends State<Login> {
   }
 
   void _onLoginSuccess(BuildContext context, infos){
-    AuthenticationManager.login(infos);
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => Home()),
-    );
+    AuthenticationManager.login(infos).then((void e) {
+      Navigator.pushReplacementNamed(context, '/');
+    });
   }
 
   void _onLoginFailure(BuildContext context, message){

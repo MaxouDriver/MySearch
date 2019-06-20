@@ -18,11 +18,14 @@ class APIManager{
 
   static Future<AdResponse> fetchAds(context) async {
     try {
+      print((await AuthenticationManager.getInfos())["token"]);
       Response response = await Dio().get(endpoint, options: Options(
         headers: {
           "Authorization": (await AuthenticationManager.getInfos())["token"],
         },
-        validateStatus: (status) { if (status == 403) onNotAuthenticated(context); else return true;}
+        validateStatus: (status) {
+          if (status == 403) onNotAuthenticated(context); else return true;
+        }
       ));
       return AdResponse.fromJson(response.data);
     } catch (e) {

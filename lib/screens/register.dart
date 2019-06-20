@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mysearch/utils/APIManager.dart';
 import 'package:mysearch/utils/AuthenticationManager.dart';
-import 'package:mysearch/screens/home.dart';
 
 class Register extends StatefulWidget {
   Register({Key key}) : super(key: key);
@@ -109,9 +108,7 @@ class _RegisterState extends State<Register> {
 
   void _onRegisterSuccess(BuildContext context, infos){
     AuthenticationManager.login(infos);
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => Home()),
-    );
+    Navigator.pushReplacementNamed(context, '/');
   }
 
   void _onRegisterFailure(BuildContext context, message){

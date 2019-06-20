@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mysearch/screens/home.dart';
 import 'package:mysearch/screens/login.dart';
+import 'package:mysearch/screens/register.dart';
 
 
 class App extends StatefulWidget {
@@ -28,6 +29,7 @@ class _AppState extends State<App> {
       routes: {
         '/': (context) => Home(),
         '/login': (context) => Login(),
+        '/register': (context) => Register(),
       }
     );
   }
