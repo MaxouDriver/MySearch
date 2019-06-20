@@ -1,6 +1,7 @@
 import 'package:mysearch/models/ad-response.dart';
 import 'package:mysearch/models/json-response.dart';
 import 'package:mysearch/models/server-response.dart';
+import 'package:mysearch/models/search-response.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -21,14 +22,39 @@ class APIManager{
         headers: {
           "Authorization": (await AuthenticationManager.getInfos())["token"],
         },
+        validateStatus: (status) { if (status == 403) onNotAuthenticated(context); else return true;}
       ));
-
-      if (response.statusCode == 403) onNotAuthenticated(context);
-
       return AdResponse.fromJson(response.data);
     } catch (e) {
-      print(e);
       return AdResponse.withError(e.toString());
+    }
+  }
+
+  static Future<SearchResponse> fetchSearchs(context) async {
+    try {
+      Response response = await Dio().get(endpoint + "search/" + (await AuthenticationManager.getInfos())["id_user"].toString(), options: Options(
+        headers: {
+          "Authorization": (await AuthenticationManager.getInfos())["token"],
+        },
+          validateStatus: (status) { if (status == 403) onNotAuthenticated(context); else return true;}
+      ));
+      return SearchResponse.fromJson(response.data);
+    } catch (e) {
+      return SearchResponse.withError(e.toString());
+    }
+  }
+
+  static Future<ServerResponse> removeSearch(id_search, context) async {
+    try {
+      Response response = await Dio().post(endpoint + "search/remove", data: {"id_search": id_search}, options: Options(
+        headers: {
+          "Authorization": (await AuthenticationManager.getInfos())["token"],
+        },
+          validateStatus: (status) { if (status == 403) onNotAuthenticated(context); else return true;}
+      ));
+      return ServerResponse.fromJson(response.data);
+    } catch (e) {
+      return ServerResponse.withError(e.toString());
     }
   }
 
@@ -56,9 +82,8 @@ class APIManager{
         headers: {
           HttpHeaders.authorizationHeader: (await AuthenticationManager.getInfos())["token"],
         },
+          validateStatus: (status) { if (status == 403) onNotAuthenticated(context); else return true;}
       ));
-
-      if (response.statusCode == 403) onNotAuthenticated(context);
 
       return JsonResponse.fromJson(response.data);
     } catch (e) {
@@ -72,9 +97,8 @@ class APIManager{
         headers: {
           HttpHeaders.authorizationHeader: (await AuthenticationManager.getInfos())["token"],
         },
+          validateStatus: (status) { if (status == 403) onNotAuthenticated(context); else return true;}
       ));
-
-      if (response.statusCode == 403) onNotAuthenticated(context);
 
       return JsonResponse.fromJson(response.data);
     } catch (e) {
@@ -88,9 +112,8 @@ class APIManager{
         headers: {
           HttpHeaders.authorizationHeader: (await AuthenticationManager.getInfos())["token"],
         },
+          validateStatus: (status) { if (status == 403) onNotAuthenticated(context); else return true;}
       ));
-
-      if (response.statusCode == 403) onNotAuthenticated(context);
 
       return ServerResponse.fromJson(response.data);
     } catch (e) {

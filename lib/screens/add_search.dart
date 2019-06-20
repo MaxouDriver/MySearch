@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:mysearch/models/category.dart';
 import 'package:mysearch/models/filter.dart';
+import 'package:mysearch/models/search.dart';
 import 'package:mysearch/models/value.dart';
 import 'package:mysearch/utils/APIManager.dart';
 import 'package:mysearch/models/json-response.dart';
@@ -123,19 +124,17 @@ class _AddSearchState extends State<AddSearch> {
 
 
   sendSearch(){
-    List<Map<String, dynamic>> listeOfFilters = [];
+    List<Filter> listeOfFilters = [];
 
+    filters.forEach((String s, Value v) => listeOfFilters.add(Filter.fromJson(v.toJson(), s)));
 
-    filters.forEach((String s, Value v) => listeOfFilters.add(v.toJson()));
+    Search search = Search(
+      category: _category,
+      filters : listeOfFilters,
+      polygons: polys.map((Polygon p) => p.points.map((LatLng l) => {"lat": l.latitude, "lng": l.longitude}).toList()).toList()
+    );
 
-    Map<String, dynamic> search = {
-      "query": _queryController.text,
-      "category": _category.toJson(),
-      "filters" : listeOfFilters,
-      if (polys.length > 0) "location": polys.map((Polygon p) => p.points.map((LatLng l) => {"lat": l.latitude, "lng": l.longitude}).toList()).toList()
-    };
-
-    APIManager.addSearch(_nameController.text, search, context).then((value)=>print(value));
+    APIManager.addSearch(_nameController.text, search.toJson(), context).then((value)=>print(value));
   }
 
 
