@@ -10,7 +10,7 @@ class SearchResponse extends ServerResponse {
     return SearchResponse(
         json["message"],
         json["error"],
-        (json['searchs'] != null) ? (new List<Map<String, dynamic>>.from(json['searchs'])).map((Map<String, dynamic> j) => Search.fromJson(j, j["name_search"])).toList() : []);
+        (json["searchs"] != null) ? (new List<Map<String, dynamic>>.from(json["searchs"])).map((Map<String, dynamic> j) => Search.fromJson(j)).toList() : []);
   }
 
   factory SearchResponse.withError(String errorValue) {

@@ -113,7 +113,7 @@ class _RegisterState extends State<Register> {
 
   void _onRegisterFailure(BuildContext context, message){
     Scaffold.of(context).showSnackBar(new SnackBar(
-      content: new Text(message),
+      content: new Text(message.toString()),
     ));
   }
 }

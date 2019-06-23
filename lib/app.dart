@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mysearch/screens/home.dart';
 import 'package:mysearch/screens/login.dart';
 import 'package:mysearch/screens/register.dart';
+import 'package:mysearch/utils/AuthenticationManager.dart';
 
 
 class App extends StatefulWidget {

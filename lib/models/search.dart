@@ -1,34 +1,27 @@
-import 'package:mysearch/models/filter.dart';
-import 'package:mysearch/models/category.dart';
+import 'package:mysearch/models/search-value.dart';
 
 class Search {
   final int id;
   final String name;
-  final Category category;
-  final List<Filter> filters;
-  final List<List<Map<String, double>>> polygons;
+  final SearchValue value;
 
+  Search({this.id, this.name, this.value});
 
-  Search({this.id, this.name, this.category, this.filters, this.polygons});
-
-  factory Search.fromJson(Map<String, dynamic> json, String name) {
+  factory Search.fromJson(Map<String, dynamic> json) {
     print(json);
+    print(json["value_search"]);
     return Search(
-      id: json["id_search"],
-      name: json["name_search"],
-      category: Category.fromJson(json["value_search"]["category"]),
-      filters: (json["value_search"]['filters'] != null) ? (new List<Map<String, dynamic>>.from(json["value_search"]['filters'])).map((Map<String, dynamic> j) => Filter.fromJson(j, "name")).toList() : [],
-      polygons: (json["value_search"]['polygons'] != null) ? (new List<Map<String, double>>.from(json["value_search"]['location'])).toList() : []
+        id: json["id_search"],
+        name: json["name_search"],
+        value: SearchValue.fromJson(json["value_search"])
     );
   }
 
   toJson() {
     Map<String, dynamic> search = {
       "id_search": id,
-      "name": name,
-      "category": category.toJson(),
-      "filters" :  filters,
-      "location": polygons
+      "name_search": name,
+      "value_search": value.toJson()
     };
 
     return search;

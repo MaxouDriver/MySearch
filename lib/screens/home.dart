@@ -17,18 +17,23 @@ class _HomeScreenState extends State<Home> {
   GlobalKey _keyRed = GlobalKey();
   bool _position = true;
 
+  @override
+  void initState() {
+    super.initState();
+
+
+  }
+
+  Future<void> executeAfterBuild() async {
+    if (AuthenticationManager.getToken() == null) {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    AuthenticationManager.getInfos().then((value){
-      if(value["token"] == null) {
-        Navigator.pushReplacementNamed(context, '/login');
-      }
-    }).catchError((error){
-      print(error.toString());
-    });
-
+    executeAfterBuild();
     return Scaffold(
       appBar: AppBar(title: Text("MySearch")),
       body: Stack(
