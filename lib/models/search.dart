@@ -8,8 +8,6 @@ class Search {
   Search({this.id, this.name, this.value});
 
   factory Search.fromJson(Map<String, dynamic> json) {
-    print(json);
-    print(json["value_search"]);
     return Search(
         id: json["id_search"],
         name: json["name_search"],

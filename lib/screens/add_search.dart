@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:mysearch/models/category.dart';
 import 'package:mysearch/models/filter.dart';
+import 'package:mysearch/models/parameter.dart';
 import 'package:mysearch/models/search-value.dart';
 import 'package:mysearch/models/search.dart';
 import 'package:mysearch/models/value.dart';
@@ -42,8 +43,6 @@ class _AddSearchState extends State<AddSearch> {
     JsonResponse res = await APIManager.filters(id, context);
 
     List<Filter> filts = [];
-
-    print(res.json);
     
     res.json["subcategories"].forEach((String s, dynamic value){
       Filter f = Filter.fromJson(value, s);
@@ -125,18 +124,18 @@ class _AddSearchState extends State<AddSearch> {
 
 
   sendSearch(){
-    List<Filter> listeOfFilters = [];
+    List<Parameter> listeOfParameters = [];
 
     filters.forEach((String s, Value v){
-      print(v.value);
-      listeOfFilters.add(Filter.fromJson(v.toJson(), s));
+      listeOfParameters.add(Parameter(name: s, value: v));
     });
 
     Search search = Search(
       name: _nameController.text,
       value: SearchValue(
+          query: _queryController.text,
           category: _category,
-          filters : listeOfFilters,
+          parameters : listeOfParameters,
           polygons: polys.map((Polygon p) => p.points.map((LatLng l) => {"lat": l.latitude, "lng": l.longitude}).toList()).toList()
       ),
     );

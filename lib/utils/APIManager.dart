@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'AuthenticationManager.dart';
 
 class APIManager{
-  static final String endpoint = "http://192.168.1.18:3000/base/";
+  static final String endpoint = "http://192.168.1.17:3000/base/";
 
   static onNotAuthenticated(context){
     Navigator.pushReplacementNamed(context, '/login');
@@ -20,6 +20,7 @@ class APIManager{
       Response response = await protectedGet(endpoint + "?id_user=" + (await AuthenticationManager.getIdUser()).toString(), context);
       return AdResponse.fromJson(response.data);
     } catch (e) {
+      print(e);
       return AdResponse.withError(e.toString());
     }
   }
@@ -27,7 +28,6 @@ class APIManager{
   static Future<SearchResponse> fetchSearchs(context) async {
     try {
       Response response = await protectedGet(endpoint + "search/" + (await AuthenticationManager.getIdUser()).toString(), context);
-      print(response.data);
       return SearchResponse.fromJson(response.data);
     } catch (e) {
       print(e);
@@ -47,7 +47,6 @@ class APIManager{
   static Future<JsonResponse> login(email, passwd, context) async {
     try {
       Response response = await Dio().post(endpoint + "user/login", data: {"email": email, "passwd": passwd});
-      print(response.data);
       return JsonResponse.fromJson(response.data);
     } catch (e) {
       return JsonResponse.withError(e.toString());
@@ -57,7 +56,6 @@ class APIManager{
   static Future<JsonResponse> register(email, passwd, context) async {
     try {
       Response response = await Dio().post(endpoint + "user/register", data: {"email": email, "passwd": passwd});
-      print(response.data);
       return JsonResponse.fromJson(response.data);
     } catch (e) {
       return JsonResponse.withError(e.toString());
