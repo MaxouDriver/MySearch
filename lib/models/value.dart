@@ -11,7 +11,7 @@ class Value {
         value: json['value']
     );
   }
-
+  @override
   toJson() {
     Map<String, dynamic> res = {
       "label": label,

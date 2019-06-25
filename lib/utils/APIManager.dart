@@ -17,10 +17,18 @@ class APIManager{
 
   static Future<AdResponse> fetchAds(context) async {
     try {
-      Response response = await protectedGet(endpoint + "?id_user=" + (await AuthenticationManager.getIdUser()).toString(), context);
+      Response response = await protectedGet(endpoint + "annonces" + "?id_user=" + (await AuthenticationManager.getIdUser()).toString(), context);
       return AdResponse.fromJson(response.data);
     } catch (e) {
-      print(e);
+      return AdResponse.withError(e.toString());
+    }
+  }
+
+  static Future<AdResponse> fetchAdsSince(context) async {
+    try {
+      Response response = await protectedGet(endpoint + "annonces/since" + "?id_user=" + (await AuthenticationManager.getIdUser()).toString(), context);
+      return AdResponse.fromJson(response.data);
+    } catch (e) {
       return AdResponse.withError(e.toString());
     }
   }
@@ -28,6 +36,7 @@ class APIManager{
   static Future<SearchResponse> fetchSearchs(context) async {
     try {
       Response response = await protectedGet(endpoint + "search/" + (await AuthenticationManager.getIdUser()).toString(), context);
+      print(response.data);
       return SearchResponse.fromJson(response.data);
     } catch (e) {
       print(e);
@@ -87,6 +96,7 @@ class APIManager{
 
       return ServerResponse.fromJson(response.data);
     } catch (e) {
+      print(e);
       return ServerResponse.withError(e.toString());
     }
   }

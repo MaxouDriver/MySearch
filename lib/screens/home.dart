@@ -36,44 +36,101 @@ class _HomeScreenState extends State<Home> {
     executeAfterBuild();
     return Scaffold(
       appBar: AppBar(title: Text("MySearch")),
-      body: Stack(
-        children: [
-          Container(
-            color: Theme.of(context).primaryColor,
-            height: 55.0,
-          ),
-          Card(
-            margin: const EdgeInsets.all(16.0),
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+      body: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: TabBar(
+              tabs: [
+                Tab(icon: Text("All")),
+                Tab(icon: Text("Newest")),
+              ],
             ),
-            child: FutureBuilder<AdResponse>(
-              future: APIManager.fetchAds(context),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data.error != null){
-                    return Text("${snapshot.error}");
-                  } print(snapshot.data.error);
-                  if (snapshot.data.ads == null) return Text("No data");
+          ),
+          body: TabBarView(
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    color: Theme.of(context).primaryColor,
+                    height: 55.0,
+                  ),
+                  Card(
+                    margin: const EdgeInsets.all(16.0),
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: FutureBuilder<AdResponse>(
+                      future: APIManager.fetchAds(context),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (snapshot.data.error != null){
+                            return Text("${snapshot.error}");
+                          } print(snapshot.data.error);
+                          if (snapshot.data.ads == null) return Text("No data");
 
-                  return new ListView(
-                      children: snapshot.data.ads.map((ad) => Card(
-                          margin: const EdgeInsets.all(10),
-                          child: ListTile(
-                              leading: Image.network(ad.images[0], width: 110,fit: BoxFit.fitWidth),
-                              title: new Text(ad.title)
-                          )
-                      )
-                      ).toList());
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                return CircularProgressIndicator();
-              },
-            ),
+                          return new ListView(
+                              children: snapshot.data.ads.map((ad) => Card(
+                                  margin: const EdgeInsets.all(10),
+                                  child: ListTile(
+                                      leading: Image.network(ad.images[0], width: 110,fit: BoxFit.fitWidth),
+                                      title: new Text(ad.title)
+                                  )
+                              )
+                              ).toList());
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return CircularProgressIndicator();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              Stack(
+                children: [
+                  Container(
+                    color: Theme.of(context).primaryColor,
+                    height: 55.0,
+                  ),
+                  Card(
+                    margin: const EdgeInsets.all(16.0),
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: FutureBuilder<AdResponse>(
+                      future: APIManager.fetchAdsSince(context),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (snapshot.data.error != null){
+                            return Text("${snapshot.error}");
+                          } print(snapshot.data.error);
+                          if (snapshot.data.ads == null) return Text("No data");
+
+                          return new ListView(
+                              children: snapshot.data.ads.map((ad) => Card(
+                                  margin: const EdgeInsets.all(10),
+                                  child: ListTile(
+                                      leading: Image.network(ad.images[0], width: 110,fit: BoxFit.fitWidth),
+                                      title: new Text(ad.title)
+                                  )
+                              )
+                              ).toList());
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return CircularProgressIndicator();
+                      },
+                    ),
+                  ),
+                ],
+              )
+
+            ],
           ),
-        ],
+        ),
       ),
       drawer: Drawer(
         child: Material(

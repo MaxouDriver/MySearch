@@ -121,13 +121,29 @@ class _AddSearchState extends State<AddSearch> {
         }).toList();
   }
 
+  indexOfParameter(List<Parameter> listeOfParameters, String paramaterName){
+    int index = 0;
+    int result = -1;
+    listeOfParameters.forEach((Parameter p){
+      if (p.name == paramaterName) {
+        result = index;
+      }
+      index++;
+    });
+    return result;
+  }
 
 
   sendSearch(){
     List<Parameter> listeOfParameters = [];
 
     filters.forEach((String s, Value v){
-      listeOfParameters.add(Parameter(name: s, value: v));
+      int index = indexOfParameter(listeOfParameters, s.split(" ")[0]);
+      if (index == -1) {
+        listeOfParameters.add(Parameter(name: s.split(" ")[0], values: [v]));
+      }else{
+        listeOfParameters[index].values.add(v);
+      }
     });
 
     Search search = Search(

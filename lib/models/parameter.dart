@@ -2,22 +2,22 @@ import 'package:mysearch/models/value.dart';
 
 class Parameter {
   final String name;
-  final Value value;
+  final List<Value> values;
 
 
-  Parameter({this.name, this.value});
+  Parameter({this.name, this.values});
 
   factory Parameter.fromJson(Map<String, dynamic> json) {
     return Parameter(
         name: json["name"],
-        value: (json['value'] != null) ? Value.fromJson(json["value"]): null
+        values: (json['values'] != null) ? (new List<Map<String, dynamic>>.from(json['values'])).map((Map<String, dynamic> j) => Value.fromJson(j)).toList() : []
     );
   }
 
   toJson() {
     Map<String, dynamic> res = {
       "name": name,
-      "value": value.toJson()
+      "values": values.map((Value v)=>v.toJson()).toList()
     };
     return res;
   }
