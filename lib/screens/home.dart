@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mysearch/models/ad.dart';
 
 import 'package:mysearch/screens/search.dart';
 import 'package:mysearch/screens/settings.dart';
 import 'package:mysearch/utils/APIManager.dart';
 import 'package:mysearch/utils/AuthenticationManager.dart';
 import 'package:mysearch/models/ad-response.dart';
+
+import 'package:carousel_slider/carousel_slider.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -28,6 +31,53 @@ class _HomeScreenState extends State<Home> {
     if (AuthenticationManager.getToken() == null) {
       Navigator.pushReplacementNamed(context, '/login');
     }
+  }
+
+  void _showDialog(Ad ad) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text(ad.title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                CarouselSlider(
+                  items: ad.images.map((link) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: BoxDecoration(
+                                color: Colors.amber
+                            ),
+                            child:  Image.network(link, fit: BoxFit.fitWidth)
+                        );
+                      },
+                    );
+                  }).toList(),
+                ),
+                Text(ad.date.toString()),
+                Text(ad.price.toString() + "€"),
+                Text(ad.description),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
 
@@ -75,7 +125,8 @@ class _HomeScreenState extends State<Home> {
                                   margin: const EdgeInsets.all(10),
                                   child: ListTile(
                                       leading: Image.network(ad.images[0], width: 110,fit: BoxFit.fitWidth),
-                                      title: new Text(ad.title)
+                                      title: new Text(ad.title),
+                                      onTap: () { _showDialog(ad); }
                                   )
                               )
                               ).toList());
