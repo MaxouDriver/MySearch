@@ -1,35 +1,39 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mysearch/utils/LocalStorageManager.dart';
 
 class AuthenticationManager{
-  static SharedPreferences prefs;
+  static String email = null;
+  static int id = null;
+  static String token = null;
 
   static Future<String> getToken() async{
-    if (prefs == null) {
-      prefs = await SharedPreferences.getInstance();
-      return prefs.getString("token");
+    if (token == null) {
+      return LocalStorageManager.getStringValue("token");
     }else{
-      return prefs.getString("token");
+      return token;
     }
   }
 
   static Future<int> getIdUser() async{
-    if (prefs == null) {
-      prefs = await SharedPreferences.getInstance();
-      return prefs.getInt("id_user");
+    if (id == null) {
+      return LocalStorageManager.getIntValue("id_user");
     }else{
-      return prefs.getInt("id_user");
+      return id;
     }
   }
 
   static login(data) async{
-    await prefs.setString('email', data["email"]);
-    await prefs.setString('token', data["token"]);
-    await prefs.setInt('id_user', data["id_user"]);
+    await LocalStorageManager.storeStringValue('email', data["email"]);
+    await LocalStorageManager.storeStringValue('token', data["token"]);
+    await LocalStorageManager.storeIntValue('id_user', data["id_user"]);
   }
 
   static logout() async{
-    await prefs.setString('email', null);
-    await prefs.setString('token', null);
-    await prefs.setInt('id_user', null);
+    await LocalStorageManager.storeStringValue('email', null);
+    await LocalStorageManager.storeStringValue('token', null);
+    await LocalStorageManager.storeIntValue('id_user', null);
+
+    email = null;
+    id = null;
+    token = null;
   }
 }
