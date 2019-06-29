@@ -19,4 +19,9 @@ class Value {
     };
     return res;
   }
+
+  @override
+  toString(){
+    return value;
+  }
 }

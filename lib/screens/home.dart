@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:mysearch/models/ad.dart';
+import 'package:mysearch/models/Ad/ad.dart';
+import 'package:mysearch/models/json-response.dart';
 
-import 'package:mysearch/screens/search.dart';
+import 'package:mysearch/screens/search-list.dart';
 import 'package:mysearch/screens/settings.dart';
 import 'package:mysearch/utils/APIManager.dart';
 import 'package:mysearch/utils/AuthenticationManager.dart';
-import 'package:mysearch/models/ad-response.dart';
+import 'package:mysearch/models/Ad/ad-response.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -23,8 +24,6 @@ class _HomeScreenState extends State<Home> {
   @override
   void initState() {
     super.initState();
-
-
   }
 
   Future<void> executeAfterBuild() async {
@@ -34,7 +33,6 @@ class _HomeScreenState extends State<Home> {
   }
 
   void _showDialog(Ad ad) {
-    // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -247,7 +245,7 @@ class _HomeScreenState extends State<Home> {
                         leading:Icon(Icons.search),
                         onTap: (){
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => Search()),
+                            MaterialPageRoute(builder: (_) => SearchList()),
                           );
                         },
                       ),

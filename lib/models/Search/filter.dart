@@ -1,4 +1,4 @@
-import 'package:mysearch/models/value.dart';
+import 'package:mysearch/models/Search/value.dart';
 
 class Filter {
   final String name;

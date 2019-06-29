@@ -1,14 +1,15 @@
-import 'package:mysearch/models/ad-response.dart';
+import 'package:latlong/latlong.dart';
+import 'package:mysearch/models/Ad/ad-response.dart';
 import 'package:mysearch/models/json-response.dart';
 import 'package:mysearch/models/server-response.dart';
-import 'package:mysearch/models/search-response.dart';
+import 'package:mysearch/models/Search/search-response.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'AuthenticationManager.dart';
 
 class APIManager{
-  static final String endpoint = "http://192.168.1.17:3000/base/";
+  static final String endpoint = "http://192.168.1.19:3000/base/";
 
   static onNotAuthenticated(context){
     Navigator.pushReplacementNamed(context, '/login');
@@ -20,6 +21,7 @@ class APIManager{
       Response response = await protectedGet(endpoint + "annonces" + "?id_user=" + (await AuthenticationManager.getIdUser()).toString(), context);
       return AdResponse.fromJson(response.data);
     } catch (e) {
+      print(e);
       return AdResponse.withError(e.toString());
     }
   }
@@ -27,16 +29,26 @@ class APIManager{
   static Future<AdResponse> fetchAdsSince(context) async {
     try {
       Response response = await protectedGet(endpoint + "annonces/since" + "?id_user=" + (await AuthenticationManager.getIdUser()).toString(), context);
+      print(response.data);
       return AdResponse.fromJson(response.data);
     } catch (e) {
+      print(e);
       return AdResponse.withError(e.toString());
+    }
+  }
+
+  static Future<JsonResponse> getTravelTime(lat, lng, context) async {
+    try {
+      Response response = await protectedGet(endpoint + "annonces/travel/" + lng.toString() + ";" + lat.toString(), context);
+      return JsonResponse.fromJson(response.data);
+    } catch (e) {
+      return JsonResponse.withError(e.toString());
     }
   }
 
   static Future<SearchResponse> fetchSearchs(context) async {
     try {
       Response response = await protectedGet(endpoint + "search/" + (await AuthenticationManager.getIdUser()).toString(), context);
-      print(response.data);
       return SearchResponse.fromJson(response.data);
     } catch (e) {
       print(e);
@@ -83,7 +95,6 @@ class APIManager{
   static Future<JsonResponse> filters(id_cat, context) async {
     try {
       Response response = await protectedGet(endpoint + "subcategories/" + id_cat.toString(), context);
-
       return JsonResponse.fromJson(response.data);
     } catch (e) {
       return JsonResponse.withError(e.toString());
@@ -93,7 +104,6 @@ class APIManager{
   static Future<ServerResponse> addSearch(String name, Map<String, dynamic> search, context) async {
     try {
       Response response = await protectedPost(endpoint + "search/add", {"id_user": (await AuthenticationManager.getIdUser()) ,"name_search": name , "value_search": search}, context);
-
       return ServerResponse.fromJson(response.data);
     } catch (e) {
       print(e);

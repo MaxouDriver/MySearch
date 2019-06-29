@@ -1,4 +1,4 @@
-import 'package:mysearch/models/search-value.dart';
+import 'package:mysearch/models/Search/search-value.dart';
 
 class Search {
   final int id;

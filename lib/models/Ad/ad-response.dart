@@ -1,4 +1,4 @@
-import 'package:mysearch/models/ad.dart';
+import 'package:mysearch/models/Ad/ad.dart';
 import 'package:mysearch/models/server-response.dart';
 
 class AdResponse extends ServerResponse {

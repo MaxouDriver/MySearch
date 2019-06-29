@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:mysearch/models/Search/search.dart';
 import 'package:mysearch/screens/add_search.dart';
-import 'package:mysearch/models/search-response.dart';
+import 'package:mysearch/models/Search/search-response.dart';
+import 'package:mysearch/screens/visualize-search.dart';
 import 'package:mysearch/utils/APIManager.dart';
 
-class Search extends StatefulWidget {
-  Search({Key key}) : super(key: key);
+class SearchList extends StatefulWidget {
+  SearchList({Key key}) : super(key: key);
 
-  _SearchState createState() => _SearchState();
+  _SearchListState createState() => _SearchListState();
 }
 
-class _SearchState extends State<Search> {
+class _SearchListState extends State<SearchList> {
   List<Search> searchs = [];
   @override
   initState() {
@@ -56,10 +58,19 @@ class _SearchState extends State<Search> {
                       children: snapshot.data.searchs.map((search) => Card(
                           margin: const EdgeInsets.all(10),
                           child: ListTile(
-                              title: new Text(search.name),
-                              trailing: IconButton(icon: Icon(Icons.delete), onPressed: () {
-                                APIManager.removeSearch(search.id, context);
-                              }),
+                            title: new Text(search.name),
+                            trailing: IconButton(icon: Icon(Icons.delete), onPressed: () {
+                              APIManager.removeSearch(search.id, context);
+                            }),
+                            onTap: (){
+                              var route = new MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                  new VisualizeSearch(
+                                      search: search
+                                  ),
+                              );
+                              Navigator.of(context).push(route);
+                            },
                           )
                       )
                       ).toList());
@@ -69,7 +80,7 @@ class _SearchState extends State<Search> {
                 return CircularProgressIndicator();
               },
             ),
-          ),
+          )
         ],
       ),
     );

@@ -1,4 +1,4 @@
-import 'package:mysearch/models/search.dart';
+import 'package:mysearch/models/Search/search.dart';
 import 'package:mysearch/models/server-response.dart';
 
 class SearchResponse extends ServerResponse {

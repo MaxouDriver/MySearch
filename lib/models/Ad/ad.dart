@@ -1,5 +1,5 @@
-import 'package:mysearch/models/ad-location.dart';
-import 'package:mysearch/models/ad-owner.dart';
+import 'package:mysearch/models/Ad/ad-location.dart';
+import 'package:mysearch/models/Ad/ad-owner.dart';
 
 class Ad {
   final int adId;

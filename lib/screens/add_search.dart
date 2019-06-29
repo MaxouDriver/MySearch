@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
-import 'package:mysearch/models/category.dart';
-import 'package:mysearch/models/filter.dart';
-import 'package:mysearch/models/parameter.dart';
-import 'package:mysearch/models/search-value.dart';
-import 'package:mysearch/models/search.dart';
-import 'package:mysearch/models/value.dart';
+import 'package:mysearch/models/Search/category.dart';
+import 'package:mysearch/models/Search/filter.dart';
+import 'package:mysearch/models/Search/parameter.dart';
+import 'package:mysearch/models/Search/search-value.dart';
+import 'package:mysearch/models/Search/search.dart';
+import 'package:mysearch/models/Search/value.dart';
+
+import 'package:mysearch/screens/search-list.dart';
 import 'package:mysearch/utils/APIManager.dart';
 import 'package:mysearch/models/json-response.dart';
 
@@ -200,6 +202,10 @@ class _AddSearchState extends State<AddSearch> {
           label: Text("Ajouter"),
           onPressed: (){
             sendSearch();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchList()),
+            );
           },
         ),
         body: Column(

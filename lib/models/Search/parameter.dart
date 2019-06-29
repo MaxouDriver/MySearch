@@ -1,4 +1,4 @@
-import 'package:mysearch/models/value.dart';
+import 'package:mysearch/models/Search/value.dart';
 
 class Parameter {
   final String name;
@@ -20,5 +20,10 @@ class Parameter {
       "values": values.map((Value v)=>v.toJson()).toList()
     };
     return res;
+  }
+
+  @override
+  toString(){
+    return name + values.toString();
   }
 }
