@@ -1,8 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mysearch/models/Ad/ad.dart';
-import 'package:mysearch/models/json-response.dart';
-
+import 'package:latlong/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:mysearch/screens/search-list.dart';
 import 'package:mysearch/screens/settings.dart';
 import 'package:mysearch/utils/APIManager.dart';
@@ -33,6 +34,9 @@ class _HomeScreenState extends State<Home> {
   }
 
   void _showDialog(Ad ad) {
+    double zoom = 12;
+    LatLng center = LatLng(48.858596, 2.339204);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -58,9 +62,31 @@ class _HomeScreenState extends State<Home> {
                     );
                   }).toList(),
                 ),
-                Text(ad.date.toString()),
-                Text(ad.price.toString() + "€"),
-                Text(ad.description),
+                new RichText(
+                  text: new TextSpan(
+                  children: [
+                    new TextSpan(
+                      text: ad.date.toString(),
+                      style: new TextStyle(color: Colors.black),
+                    ),
+                    new TextSpan(
+                      text: ad.price.toString() + "€",
+                      style: new TextStyle(color: Colors.black),
+                    ),
+                    new TextSpan(
+                      text: ad.description,
+                      style: new TextStyle(color: Colors.black),
+                    ),
+                    new TextSpan(
+                      text: 'Lien vers l\'annonce',
+                      style: new TextStyle(color: Colors.blue),
+                      recognizer: new TapGestureRecognizer()
+                      ..onTap = () { launch(ad.link);
+                      },
+                    ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
