@@ -20,7 +20,7 @@ class LocalStorageManager{
     }
   }
 
-  static storeStringValue(String key, String data) async{
+  static Future<void> storeStringValue(String key, String data) async{
     if (prefs == null) {
       prefs = await SharedPreferences.getInstance();
       await prefs.setString(key, data);
@@ -28,7 +28,7 @@ class LocalStorageManager{
       await prefs.setString(key, data);
     }
   }
-  static storeIntValue(String key, int data) async{
+  static Future<void> storeIntValue(String key, int data) async{
     if (prefs == null) {
       prefs = await SharedPreferences.getInstance();
       await prefs.setInt(key, data);

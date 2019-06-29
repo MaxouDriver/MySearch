@@ -22,6 +22,10 @@ class _SettingsState extends State<Settings> {
     setState(() { });
   }
 
+  changeText(text) async {
+    await LocalStorageManager.storeStringValue("serverURL", text[text.length-1] == "/" ? text : text + "/");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +43,7 @@ class _SettingsState extends State<Settings> {
               hintText: 'Your server location'
           ),
           onChanged: (text) {
-            LocalStorageManager.storeStringValue("serverURL", text[text.length] == "/" ? text : text + "/");
+            changeText(text);
           },
         )
       ],
