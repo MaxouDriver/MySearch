@@ -249,7 +249,7 @@ class _HomeScreenState extends State<Home> {
                                 ],
                               ),
                               onSelected: (String s) {
-                                if (s == "Lougout") {
+                                if (s == "Logout") {
                                   AuthenticationManager.logout();
                                   Navigator.pushReplacementNamed(context, '/login');
                                 }

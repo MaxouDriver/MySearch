@@ -16,7 +16,7 @@ class APIManager{
   }
 
   static getEndPoint() async{
-    return LocalStorageManager.getStringValue("serverURL");
+    return LocalStorageManager.getStringValue("serverURL") == null ? "" : LocalStorageManager.getStringValue("serverURL");
   }
 
   static Future<AdResponse> fetchAds(context) async {
