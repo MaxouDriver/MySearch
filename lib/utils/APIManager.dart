@@ -63,7 +63,11 @@ class APIManager{
   }
 
   static Future<SearchResponse> fetchSearchs(context) async {
-    SearchResponse.fromJson(await retreiveData("searchs", (await getEndPoint())  + "search/" + (await AuthenticationManager.getIdUser()).toString(), context));
+    Map<String, dynamic> res = await retreiveData("searchs", (await getEndPoint())  + "search/" + (await AuthenticationManager.getIdUser()).toString(), context);
+    if(res["error"] != null)
+      return SearchResponse.withError(res["error"]); 
+    else
+      return SearchResponse.fromJson(res);
   }
 
   static Future<ServerResponse> removeSearch(id_search, context) async {
@@ -80,7 +84,6 @@ class APIManager{
       Response response = await Dio().post((await getEndPoint())  + "user/login", data: {"email": email, "passwd": passwd});
       return JsonResponse.fromJson(response.data);
     } catch (e) {
-      print(e);
       return JsonResponse.withError(e.toString());
     }
   }
@@ -95,11 +98,19 @@ class APIManager{
   }
 
   static Future<JsonResponse> categories(context) async {
-     return JsonResponse.fromJson(await retreiveData("categories", (await getEndPoint())  + "categories", context));
+     Map<String, dynamic> res = await retreiveData("categories", (await getEndPoint())  + "categories", context);
+     if(res["error"] != null)
+      return JsonResponse.withError(res["error"]); 
+    else
+      return JsonResponse.fromJson(res);
   }
 
   static Future<JsonResponse> filters(id_cat, context) async {
-    return JsonResponse.fromJson(await retreiveData("filters", (await getEndPoint())  + "subcategories/" + id_cat.toString(), context));
+    Map<String, dynamic> res = await retreiveData("filters", (await getEndPoint())  + "subcategories/" + id_cat.toString(), context);
+    if(res["error"] != null)
+      return JsonResponse.withError(res["error"]); 
+    else
+      return JsonResponse.fromJson(res);
   }
 
   static Future<ServerResponse> addSearch(String name, Map<String, dynamic> search, context) async {
@@ -107,7 +118,6 @@ class APIManager{
       Response response = await protectedPost((await getEndPoint())  + "search/add", {"id_user": (await AuthenticationManager.getIdUser()) ,"name_search": name , "value_search": search}, context);
       return ServerResponse.fromJson(response.data);
     } catch (e) {
-      print(e);
       return ServerResponse.withError(e.toString());
     }
   }

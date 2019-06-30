@@ -21,9 +21,6 @@ class _VisualizeSearchState extends State<VisualizeSearch> {
   initState() {
     super.initState();
     search = widget.search;
-    if (search != null) {
-      print(search.toJson());
-    }
 
     polys = search.value.polygons.map((List<dynamic> l) {
       List<LatLng> points = [];

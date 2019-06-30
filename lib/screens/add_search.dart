@@ -158,7 +158,11 @@ class _AddSearchState extends State<AddSearch> {
       ),
     );
 
-    APIManager.addSearch(_nameController.text, search.toJson(), context).then((value)=>print(value));
+    APIManager.addSearch(_nameController.text, search.toJson(), context).then((value)=>
+      Scaffold.of(context).showSnackBar(new SnackBar(
+        content: new Text(value.toString()),
+      ))
+    );
   }
 
 

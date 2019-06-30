@@ -141,7 +141,7 @@ class _HomeScreenState extends State<Home> {
                         if (snapshot.hasData) {
                           if (snapshot.data.error != null){
                             return Text("${snapshot.error}");
-                          } print(snapshot.data.error);
+                          }
                           if (snapshot.data.ads == null) return Text("No data");
 
                           return new ListView(
@@ -181,7 +181,7 @@ class _HomeScreenState extends State<Home> {
                         if (snapshot.hasData) {
                           if (snapshot.data.error != null){
                             return Text("${snapshot.error}");
-                          } print(snapshot.data.error);
+                          }
                           if (snapshot.data.ads == null) return Text("No data");
 
                           return new ListView(
