@@ -7,12 +7,30 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mysearch/utils/LocalStorageManager.dart';
 import 'AuthenticationManager.dart';
+import 'package:expire_cache/expire_cache.dart';
 
 class APIManager{
+  static final ExpireCache<String, Map<String, dynamic>> cache = ExpireCache<String, Map<String, dynamic>>(expireDuration: new Duration(minutes: 5), sizeLimit: 20);
 
   static onNotAuthenticated(context){
     Navigator.pushReplacementNamed(context, '/login');
     AuthenticationManager.logout();
+  }
+  // Method used to retrieve data wherever it's coming from (cache/server)
+  static Future<Map<String, dynamic>> retreiveData(String key, String serverUrl, BuildContext context) async{
+    Map<String, dynamic> res  = await cache.get(key);
+    
+    if(res == null) {
+      try{
+        Response response = await protectedGet(serverUrl, context);
+        cache.set(key, response.data);
+        res = response.data;
+      }catch(e){
+        res = {"error": e};
+      }
+    }
+
+    return res;
   }
 
   static getEndPoint() async{
@@ -20,24 +38,19 @@ class APIManager{
   }
 
   static Future<AdResponse> fetchAds(context) async {
-    try {
-      Response response = await protectedGet((await getEndPoint()) + "annonces" + "?id_user=" + (await AuthenticationManager.getIdUser()).toString(), context);
-      return AdResponse.fromJson(response.data);
-    } catch (e) {
-      print(e);
-      return AdResponse.withError(e.toString());
-    }
+    Map<String, dynamic> res = await retreiveData("ads", (await getEndPoint()) + "annonces" + "?id_user=" + (await AuthenticationManager.getIdUser()).toString(), context);
+    if(res["error"] != null)
+      return AdResponse.withError(res["error"]); 
+    else
+      return AdResponse.fromJson(res);
   }
 
   static Future<AdResponse> fetchAdsSince(context) async {
-    try {
-      Response response = await protectedGet((await getEndPoint())  + "annonces/since" + "?id_user=" + (await AuthenticationManager.getIdUser()).toString(), context);
-      print(response.data);
-      return AdResponse.fromJson(response.data);
-    } catch (e) {
-      print(e);
-      return AdResponse.withError(e.toString());
-    }
+    Map<String, dynamic> res = await retreiveData("adsSince", (await getEndPoint())  + "annonces/since" + "?id_user=" + (await AuthenticationManager.getIdUser()).toString(), context);
+    if(res["error"] != null)
+      return AdResponse.withError(res["error"]); 
+    else
+      return AdResponse.fromJson(res);
   }
 
   static Future<JsonResponse> getTravelTime(lat, lng, context) async {
@@ -50,13 +63,7 @@ class APIManager{
   }
 
   static Future<SearchResponse> fetchSearchs(context) async {
-    try {
-      Response response = await protectedGet((await getEndPoint())  + "search/" + (await AuthenticationManager.getIdUser()).toString(), context);
-      return SearchResponse.fromJson(response.data);
-    } catch (e) {
-      print(e);
-      return SearchResponse.withError(e.toString());
-    }
+    SearchResponse.fromJson(await retreiveData("searchs", (await getEndPoint())  + "search/" + (await AuthenticationManager.getIdUser()).toString(), context));
   }
 
   static Future<ServerResponse> removeSearch(id_search, context) async {
@@ -73,6 +80,7 @@ class APIManager{
       Response response = await Dio().post((await getEndPoint())  + "user/login", data: {"email": email, "passwd": passwd});
       return JsonResponse.fromJson(response.data);
     } catch (e) {
+      print(e);
       return JsonResponse.withError(e.toString());
     }
   }
@@ -87,21 +95,11 @@ class APIManager{
   }
 
   static Future<JsonResponse> categories(context) async {
-    try {
-      Response response = await protectedGet((await getEndPoint())  + "categories", context);
-      return JsonResponse.fromJson(response.data);
-    } catch (e) {
-      return JsonResponse.withError(e.toString());
-    }
+     return JsonResponse.fromJson(await retreiveData("categories", (await getEndPoint())  + "categories", context));
   }
 
   static Future<JsonResponse> filters(id_cat, context) async {
-    try {
-      Response response = await protectedGet((await getEndPoint())  + "subcategories/" + id_cat.toString(), context);
-      return JsonResponse.fromJson(response.data);
-    } catch (e) {
-      return JsonResponse.withError(e.toString());
-    }
+    return JsonResponse.fromJson(await retreiveData("filters", (await getEndPoint())  + "subcategories/" + id_cat.toString(), context));
   }
 
   static Future<ServerResponse> addSearch(String name, Map<String, dynamic> search, context) async {
