@@ -1,12 +1,15 @@
-import 'package:mysearch/models/server-response.dart';
+import 'package:MySearch/models/server-response.dart';
 
 class JsonResponse extends ServerResponse {
-  final Map<String, dynamic> json;
+  final Map<String, dynamic> data;
 
-  JsonResponse(String message, String error, this.json) : super(message: message, error: error);
+  JsonResponse(String message, String error, this.data)
+      : super(message: message, error: error);
 
   factory JsonResponse.fromJson(Map<String, dynamic> json) {
-    return JsonResponse(json["message"], json["error"], json['json']);
+    JsonResponse response =
+        JsonResponse(json["message"], json["error"], json['data']);
+    return response;
   }
 
   factory JsonResponse.withError(String errorValue) {
